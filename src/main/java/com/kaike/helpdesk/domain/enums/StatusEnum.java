@@ -1,13 +1,13 @@
 package com.kaike.helpdesk.domain.enums;
 
-public enum Status {
+public enum StatusEnum {
 
 	ABERTO(0, "ABERTO"), ANDAMENTO(1, "ANDAMENTO"), ENCERRADO(2, "ENCERRADO");
 
 	private Integer codigo;
 	private String descricao;
 
-	private Status(Integer codigo, String descricao) {
+	private StatusEnum(Integer codigo, String descricao) {
 		this.codigo = codigo;
 		this.descricao = descricao;
 	}
@@ -20,12 +20,12 @@ public enum Status {
 		return descricao;
 	}
 
-	public static Status toEnum(Integer cod) {
+	public static StatusEnum toEnum(Integer cod) {
 		if (cod == null) {
 			return null;
 		}
 
-		for (Status x : Status.values()) { // pega os valor de Perfil (ADMIN, CLIENTE, TECNICO)
+		for (StatusEnum x : StatusEnum.values()) { // pega os valor de Perfil (ADMIN, CLIENTE, TECNICO)
 			if (cod.equals(x.getCodigo())) {
 				return x;
 			}
