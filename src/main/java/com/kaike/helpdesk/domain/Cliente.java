@@ -3,6 +3,7 @@ package com.kaike.helpdesk.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kaike.helpdesk.domain.enums.Perfil;
 
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ public class Cliente extends Pessoa {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Chamado> chamado =  new ArrayList<>();
 
