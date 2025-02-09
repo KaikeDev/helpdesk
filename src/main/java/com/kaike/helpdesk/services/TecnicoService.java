@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kaike.helpdesk.domain.Tecnico;
+import com.kaike.helpdesk.domain.dtos.TecnicoDTO;
 import com.kaike.helpdesk.repositories.TecnicoRepository;
 import com.kaike.helpdesk.services.exceptions.ObjectNotFoundException;
 
@@ -26,5 +27,11 @@ public class TecnicoService {
 
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! "+ id));
 
+	}
+
+	public Tecnico create(TecnicoDTO oBJdto) {
+		oBJdto.setId(null);
+		Tecnico newOBJ = new Tecnico(oBJdto);
+		return tecnicoRepository.save(newOBJ);
 	}
 }
