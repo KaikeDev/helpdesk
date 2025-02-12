@@ -2,8 +2,10 @@ package com.kaike.helpdesk.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kaike.helpdesk.domain.dtos.ClienteDTO;
 import com.kaike.helpdesk.domain.enums.Perfil;
 
 import jakarta.persistence.Entity;
@@ -29,6 +31,17 @@ public class Cliente extends Pessoa {
 
 		addPerfil(Perfil.CLIENTE);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Cliente(ClienteDTO obj) {
+		this.id = obj.getId();
+		this.nome = obj.getNome();
+		this.cpf = obj.getCpf();
+		this.email = obj.getEmail();
+		this.senha = obj.getSenha();
+		this.perfis = obj.getPerfis().stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
+		this.dataCriacao = obj.getDataCriacao();
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public List<Chamado> getChamado() {

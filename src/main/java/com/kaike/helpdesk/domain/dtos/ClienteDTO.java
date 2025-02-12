@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kaike.helpdesk.domain.Pessoa;
-import com.kaike.helpdesk.domain.Tecnico;
+import com.kaike.helpdesk.domain.Cliente;
 import com.kaike.helpdesk.domain.enums.Perfil;
 
 import jakarta.validation.constraints.NotNull;
 
-public class TecnicoDTO extends Pessoa implements Serializable{
+public class ClienteDTO extends Pessoa implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,12 +33,12 @@ public class TecnicoDTO extends Pessoa implements Serializable{
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	protected LocalDate dataCriacao = LocalDate.now();
 
-	public TecnicoDTO() {
+	public ClienteDTO() {
 		super();
 		addPerfil(Perfil.CLIENTE);
 	}
 
-	public TecnicoDTO(Tecnico obj) {
+	public ClienteDTO(Cliente obj) {
 		this.id = obj.getId();
 		this.nome = obj.getNome();
 		this.cpf = obj.getCpf();
