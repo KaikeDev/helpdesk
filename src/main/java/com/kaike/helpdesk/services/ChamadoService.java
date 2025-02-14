@@ -1,5 +1,6 @@
 package com.kaike.helpdesk.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,14 @@ public class ChamadoService {
 
 		return chamadoRepository.save(newChamado(novoCliente));
 	}
+	
+	public Chamado update(Integer id, @Valid ChamadoDTO novoChamado) {
+		novoChamado.setId(id);
+		
+		Chamado oldObj = findById(id);
+		oldObj = newChamado(novoChamado);
+		return chamadoRepository.save(oldObj);
+	}
 
 	private Chamado newChamado(ChamadoDTO obj) {
 		Tecnico tecnico = tecnicoService.findByid(obj.getTecnico());
@@ -53,6 +62,10 @@ public class ChamadoService {
 
 		if (obj.getId() != null) {
 			chamado.setId(obj.getId());
+		}
+		
+		if(obj.getStatus().equals(2)) {
+			chamado.setDataFechamento(LocalDate.now());
 		}
 
 		chamado.setTecnico(tecnico);
@@ -65,5 +78,7 @@ public class ChamadoService {
 
 		return chamado;
 	}
+
+	
 
 }
