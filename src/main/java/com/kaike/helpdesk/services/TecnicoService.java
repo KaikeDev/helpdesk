@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kaike.helpdesk.domain.Pessoa;
@@ -24,6 +25,9 @@ public class TecnicoService {
 
 	@Autowired
 	PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
 	public List<Tecnico> findAll() {
 		return tecnicoRepository.findAll();
@@ -39,6 +43,7 @@ public class TecnicoService {
 
 	public Tecnico create(TecnicoDTO oBJdto) {
 		oBJdto.setId(null);
+		oBJdto.setSenha(encoder.encode(oBJdto.getSenha()));
 		validaCPFandEMAIL(oBJdto);
 		Tecnico newOBJ = new Tecnico(oBJdto);
 		return tecnicoRepository.save(newOBJ);
