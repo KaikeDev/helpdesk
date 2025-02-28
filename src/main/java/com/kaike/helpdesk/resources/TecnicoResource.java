@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class TecnicoResource {
 	@Autowired
 	private TecnicoService tecnicoService;
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@GetMapping()
 	public ResponseEntity<List<TecnicoDTO>> findAll() {
 
@@ -46,8 +48,11 @@ public class TecnicoResource {
 
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PostMapping()
 	public ResponseEntity<TecnicoDTO> createTecnico(@Valid @RequestBody TecnicoDTO OBJdto) {
+	    System.out.println("POST request received");
+
 		Tecnico newOBJ = tecnicoService.create(OBJdto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").buildAndExpand(newOBJ.getId())
 				.toUri();
@@ -55,14 +60,19 @@ public class TecnicoResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+
+	//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<TecnicoDTO> updateTecnico(@PathVariable Integer id, @Valid @RequestBody TecnicoDTO objDTO){
+		
 		Tecnico obj = tecnicoService.update(id, objDTO);
 		
 		return ResponseEntity.ok().body(new TecnicoDTO(obj));
 		
 	}
 
+
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<TecnicoDTO> deleteTecnico(@PathVariable Integer id){
 		

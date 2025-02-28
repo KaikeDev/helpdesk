@@ -5,8 +5,12 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,10 +23,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.kaike.helpdesk.security.JWTAuthenticationFilter;
+import com.kaike.helpdesk.security.JWTAuthorizationFilter;
 import com.kaike.helpdesk.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private static final String[] PUBLIC_MATCHES = {"/h2-console/**"};
@@ -44,22 +50,19 @@ public class SecurityConfig {
     }
 
     @Bean
-     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        // Instanciando o JWTAuthenticationFilter com o AuthenticationManager
-        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager, jwtUtil);
-
-        return http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**", "/login")) // Ignora CSRF para o H2 Console
-             .sessionManagement(sm -> sm
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura sessão sem estado
-             .authorizeHttpRequests(req -> {
-                 req.requestMatchers("/login").permitAll(); // Permite acesso ao endpoint de login sem autenticação
-                 req.requestMatchers(PUBLIC_MATCHES).permitAll(); // Acesso ao H2 Console
-                 req.anyRequest().authenticated(); // Exige autenticação para qualquer outra requisição
-             })
-             // Adiciona o filtro JWT antes do filtro de login
-             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) 
-             .build();
+    SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    	return http
+    		    .cors(Customizer.withDefaults())
+    		    .csrf(csrf -> csrf.disable()) // 🔹 Desativa o CSRF temporariamente
+    		    .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    		    .authorizeHttpRequests(req -> {
+    		        req.requestMatchers("/login").permitAll();
+    		        req.requestMatchers(HttpMethod.POST, "/tecnicos").permitAll();
+    		        req.anyRequest().authenticated();
+    		    })
+    		    .addFilterBefore(new JWTAuthenticationFilter(authenticationManager, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+    		    .addFilter(new JWTAuthorizationFilter(authenticationManager, jwtUtil, userDetailsService))
+    		    .build();
     }
 
     @Bean
