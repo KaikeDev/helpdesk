@@ -24,6 +24,7 @@ public class UserDetailsServiceLmpl implements UserDetailsService{
 		Optional<Pessoa> user = pessoaRepository.findByEmail(email);
 		if(user.isPresent()) {
 			System.out.println("Usuário encontrado: " + user.get().getEmail());
+			System.out.println("Senha encontrado: " + user.get().getSenha());
 		       	
 			return new UserSS(user.get().getId(), user.get().getEmail(), user.get().getSenha(), user.get().getPerfis());
 		}

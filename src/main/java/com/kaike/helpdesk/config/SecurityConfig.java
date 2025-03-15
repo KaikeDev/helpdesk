@@ -51,29 +51,33 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-    	return http
-    		    .cors(Customizer.withDefaults())
-    		    .csrf(csrf -> csrf.disable()) // 🔹 Desativa o CSRF temporariamente
-    		    .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-    		    .authorizeHttpRequests(req -> {
-    		        req.requestMatchers("/login").permitAll();
-    		        req.requestMatchers(HttpMethod.POST, "/tecnicos").permitAll();
-    		        req.anyRequest().authenticated();
-    		    })
-    		    .addFilterBefore(new JWTAuthenticationFilter(authenticationManager, jwtUtil), UsernamePasswordAuthenticationFilter.class)
-    		    .addFilter(new JWTAuthorizationFilter(authenticationManager, jwtUtil, userDetailsService))
-    		    .build();
+        return http
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable()) // Desativa o CSRF temporariamente
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers("/login").permitAll(); // Permite acesso ao login
+                    req.anyRequest().authenticated(); // Requer autenticação para os outros endpoints
+                })
+                .addFilterBefore(new JWTAuthenticationFilter(authenticationManager, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new JWTAuthorizationFilter(authenticationManager, jwtUtil, userDetailsService))
+                .build();
     }
 
+
     @Bean
-     CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // Ajuste para o domínio do frontend
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:8080", 
+            "https://helpdesk-xfdr.onrender.com"
+        )); // Agora as duas origens são passadas uma vez
         configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         return request -> configuration;
     }
+
 
     @Bean
      PasswordEncoder passwordEncoder() {

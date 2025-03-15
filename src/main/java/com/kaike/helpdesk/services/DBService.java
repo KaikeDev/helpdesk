@@ -36,8 +36,9 @@ public class DBService {
 	@Autowired
 	private PasswordEncoder encoder;
 
+	/*
 	public void instanciaDB() {
-		Tecnico tec1 = new Tecnico(null, "Kaike Tuerpe", "123456789", "kaike@gmail.com", encoder.encode("123"));
+		Tecnico tec1 = new Tecnico(null, "Kaike Tuerpe", "123456712", "kaike@gmail.com", encoder.encode("123"));
 		tec1.addPerfil(Perfil.ADMIN);
 		
 		Tecnico tec2 = new Tecnico(null, "Richard Stallman", "903.347.070-56", "stallman@mail.com", encoder.encode("123"));
@@ -67,4 +68,5 @@ public class DBService {
 	
 		chamadoRepository.saveAll(Arrays.asList(c1, c2, c3, c4, c5, c6));
 	}
+	*/
 }
