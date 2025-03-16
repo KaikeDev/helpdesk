@@ -1,18 +1,9 @@
 package com.kaike.helpdesk.services;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.kaike.helpdesk.domain.Chamado;
-import com.kaike.helpdesk.domain.Cliente;
-import com.kaike.helpdesk.domain.Tecnico;
-import com.kaike.helpdesk.domain.enums.Perfil;
-import com.kaike.helpdesk.domain.enums.Prioridade;
-import com.kaike.helpdesk.domain.enums.StatusEnum;
 import com.kaike.helpdesk.repositories.ChamadoRepository;
 import com.kaike.helpdesk.repositories.ClienteRepository;
 import com.kaike.helpdesk.repositories.PessoaRepository;
